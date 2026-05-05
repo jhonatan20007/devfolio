@@ -1,5 +1,5 @@
 import { type FormEvent, useState } from "react";
-import { CONTACT_EMAIL, getFormSubmitAjaxUrl } from "../../content/contact";
+import { buildFormSubmitPayload, CONTACT_EMAIL, FORMSUBMIT_AJAX_URL } from "../../content/contact";
 import { siteLinks } from "../../content/site";
 
 type SubmitStatus = "idle" | "submitting" | "success" | "error";
@@ -17,25 +17,21 @@ export function ContactSection() {
     setStatus("submitting");
     setErrorDetail(null);
 
-    const endpoint = getFormSubmitAjaxUrl(CONTACT_EMAIL);
-
     try {
-      const res = await fetch(endpoint, {
+      const res = await fetch(FORMSUBMIT_AJAX_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
         },
-        body: JSON.stringify({
-          name,
-          email: replyEmail,
-          subject: subject.trim() || "Mensaje desde el portafolio",
-          message,
-          _subject: `[Portafolio] ${subject.trim() || "Nuevo mensaje"}`,
-          _template: "table",
-          _captcha: false,
-          _gotcha: "",
-        }),
+        body: JSON.stringify(
+          buildFormSubmitPayload({
+            name,
+            replyEmail,
+            subject,
+            message,
+          }),
+        ),
       });
 
       const data = (await res.json()) as { success?: boolean; message?: string };
@@ -89,8 +85,8 @@ export function ContactSection() {
               .
             </p>
             <p className="mt-stack-md font-body text-xs leading-relaxed text-muted/90">
-              El envío usa FormSubmit: la primera vez puede pedirte confirmar tu correo en la bandeja de{" "}
-              <span className="text-muted">{CONTACT_EMAIL}</span>.
+              Los envíos usan tu formulario activado en FormSubmit (clave segura); los correos llegan a{" "}
+              <span className="text-muted">{CONTACT_EMAIL}</span> con plantilla «box» más legible.
             </p>
           </header>
 
@@ -179,10 +175,7 @@ export function ContactSection() {
 
               <div role="status" aria-live="polite" className="min-h-5 font-body text-sm">
                 {status === "success" ? (
-                  <p className="text-secondary">
-                    Mensaje enviado. Si es la primera vez con FormSubmit, revisa tu Gmail ({CONTACT_EMAIL}) por si piden
-                    confirmar el reenvío.
-                  </p>
+                  <p className="text-secondary">Mensaje enviado. Revisa tu bandeja (y spam) en los próximos minutos.</p>
                 ) : null}
                 {status === "error" ? (
                   <p className="text-error">
