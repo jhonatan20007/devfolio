@@ -1,0 +1,5 @@
+.env
+.env.local
+stitch-export/
+node_modules
+dist
