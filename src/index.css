@@ -1,15 +1,15 @@
 @import "tailwindcss";
 
 /*
- * Tokens sincronizados con Stitch: "Professional Developer Portfolio Showcase"
- * (colorMode DARK, SPACE_GROTESK + INTER, accent #6366F1)
+ * Tokens Stitch — Professional Developer Portfolio Showcase
+ * UI: capas suaves, bordes tenues, acento índigo (#6366F1).
  */
 @theme {
   --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
   --font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
 
-  --radius-card: 12px;
-  --radius-control: 8px;
+  --radius-card: 16px;
+  --radius-control: 10px;
 
   --color-background: #0b1326;
   --color-surface: #0b1326;
@@ -36,18 +36,47 @@
   --color-on-error: #690005;
   --color-error-container: #93000a;
 
-  --spacing-section: 120px;
-  --spacing-stack-lg: 32px;
-  --spacing-stack-md: 16px;
-  --spacing-stack-sm: 8px;
+  --spacing-section: 104px;
+  --spacing-stack-lg: 40px;
+  --spacing-stack-md: 20px;
+  --spacing-stack-sm: 10px;
   --spacing-gutter: 24px;
-  --spacing-page: 48px;
+  --spacing-page: 56px;
 
-  --width-design: 1200px;
+  --width-design: 1120px;
 }
 
 @layer base {
   body {
-    @apply bg-background text-foreground font-body text-base leading-relaxed;
+    @apply bg-background text-foreground font-body text-base leading-relaxed antialiased;
+  }
+}
+
+/* Patrón de sección tipo Stitch: ribete superior + viñeta muy ligera */
+@layer components {
+  .stitch-section {
+    @apply scroll-mt-24 border-t border-outline-variant/15 md:scroll-mt-28;
+    background-image: linear-gradient(
+      180deg,
+      color-mix(in oklab, var(--color-surface-container) 65%, transparent) 0%,
+      transparent 42%
+    );
+  }
+
+  .stitch-section-inner {
+    @apply mx-auto px-6 py-section md:px-gutter;
+    max-width: var(--width-design);
+  }
+
+  .stitch-eyebrow {
+    @apply font-body text-[11px] font-semibold uppercase tracking-[0.22em] text-brand;
+  }
+
+  .stitch-headline {
+    @apply font-display text-[clamp(1.75rem,4vw,2.75rem)] font-semibold leading-[1.12] tracking-[-0.03em] text-foreground;
+  }
+
+  .stitch-rule {
+    @apply mt-stack-md h-1 w-12 rounded-full bg-linear-to-r from-brand to-transparent;
   }
 }
